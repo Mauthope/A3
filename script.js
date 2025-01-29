@@ -46,10 +46,10 @@ function handleSave() {
 function adicionarRequisito() {
   const lista = $("requisitos-list")
   const li = document.createElement("li")
-  li.innerHTML = 
+  li.innerHTML = `
         <input type="text" placeholder="Digite o requisito">
         <button class="btn-remover" onclick="removerRequisito(this)">Remover</button>
-    
+    `
   lista.appendChild(li)
 }
 
@@ -89,11 +89,11 @@ function criarCelulaPlanoAcao(colIndex) {
   } else if (colIndex === 5) {
     // Status
     const select = document.createElement("select")
-    select.innerHTML = 
+    select.innerHTML = `
             <option value="Não iniciado">Não iniciado</option>
             <option value="Em andamento">Em andamento</option>
             <option value="Concluído">Concluído</option>
-        
+        `
     return select
   } else {
     return criarInput()
@@ -144,15 +144,15 @@ function configurarColoracaoCelulas(row) {
 }
 
 function aplicarColoracao(row) {
-  const meta = parseFloat(row.cells[1].querySelector("input").value.replace(',', '.'))
-  const objFuturo = parseFloat(row.cells[2].querySelector("input").value.replace(',', '.'))
+  const meta = Number.parseFloat(row.cells[1].querySelector("input").value)
+  const objFuturo = Number.parseFloat(row.cells[2].querySelector("input").value)
 
   if (isNaN(meta) || isNaN(objFuturo)) return
 
   const cells = Array.from(row.cells).slice(3) // Jan até Média
 
   cells.forEach((cell) => {
-    const valor = parseFloat((cell.querySelector("input")?.value || cell.textContent).replace(',', '.'))
+    const valor = Number.parseFloat(cell.querySelector("input")?.value || cell.textContent)
     if (isNaN(valor)) return
 
     let cor
@@ -169,7 +169,6 @@ function aplicarColoracao(row) {
     cell.className = `cor-${cor}`
   })
 }
-
 
 function salvarDados(setor) {
   const dados = {
@@ -213,10 +212,10 @@ function carregarDados(setor) {
   $("requisitos-list").innerHTML = ""
   dados.requisitos.forEach((requisito) => {
     const li = document.createElement("li")
-    li.innerHTML = 
+    li.innerHTML = `
             <input type="text" value="${requisito}">
             <button class="btn-remover" onclick="removerRequisito(this)">Remover</button>
-        
+        `
     $("requisitos-list").appendChild(li)
   })
 
@@ -263,11 +262,11 @@ function criarCelulaPlanoAcaoComDado(colIndex, valor) {
     return input
   } else if (colIndex === 5) {
     const select = document.createElement("select")
-    select.innerHTML = 
+    select.innerHTML = `
             <option value="Não iniciado">Não iniciado</option>
             <option value="Em andamento">Em andamento</option>
             <option value="Concluído">Concluído</option>
-        
+        `
     select.value = valor
     return select
   } else {
@@ -283,3 +282,4 @@ function limparFormulario() {
     $(tableId).querySelector("tbody").innerHTML = ""
   })
 }
+

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema A3</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-container">
+        <h1>Login do Sistema A3</h1>
+        <select id="setor-select">
+            <option value="">Selecione o setor</option>
+            <option value="Laminação">Laminação</option>
+            <option value="Impressão">Impressão</option>
+            <option value="Acabamento">Acabamento</option>
+            <option value="Soldada">Soldada</option>
+            <option value="Corte BB">Corte BB</option>
+            <option value="Corte e Solda">Corte e Solda</option>
+            <option value="Carimbadeira">Carimbadeira</option>
+            <option value="Logística">Logística</option>
+            <option value="Apontamento">Apontamento</option>
+            <option value="Expedição">Expedição</option>
+            <option value="Manutenção">Manutenção</option>
+        </select>
+        <button id="login-btn">Entrar</button>
+    </div>
+
+    <div id="a3-container" style="display: none;">
+        <h1>A3 - <span id="setor-title"></span></h1>
+        <div id="a3-content">
+            <div class="a3-section" id="requisitos-negocio">
+                <h2>Requisitos de Negócio</h2>
+                <textarea id="requisitos-text"></textarea>
+            </div>
+            <div class="a3-section" id="situacao-atual">
+                <h2>Situação Atual</h2>
+                <table id="situacao-atual-table">
+                    <thead>
+                        <tr>
+                            <th>Indicadores</th>
+                            <th>Meta</th>
+                            <th>OBJ. Futuro</th>
+                            <th>Realizado ano anterior</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button class="add-row-btn" data-table="situacao-atual-table">Adicionar Linha</button>
+            </div>
+            <div class="a3-section" id="situacao-alvo">
+                <h2>Situação Alvo</h2>
+                <table id="situacao-alvo-table">
+                    <thead>
+                        <tr>
+                            <th>Indicadores</th>
+                            <th>Meta</th>
+                            <th>OBJ. Futuro</th>
+                            <th>Realizado ano atual</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button class="add-row-btn" data-table="situacao-alvo-table">Adicionar Linha</button>
+            </div>
+            <div class="a3-section" id="plano-acao">
+                <h2>Plano de Ação</h2>
+                <table id="plano-acao-table">
+                    <thead>
+                        <tr>
+                            <th>Ação</th>
+                            <th>Indicadores Alvo</th>
+                            <th>Data de Abertura</th>
+                            <th>Responsável</th>
+                            <th>Prazo</th>
+                            <th>Status</th>
+                            <th>Evidência</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button class="add-row-btn" data-table="plano-acao-table">Adicionar Linha</button>
+            </div>
+            <div class="a3-section" id="indicadores">
+                <h2>Indicadores</h2>
+                <table id="indicadores-table">
+                    <thead>
+                        <tr>
+                            <th>Indicadores</th>
+                            <th>Meta</th>
+                            <th>OBJ Futuro</th>
+                            <th>Jan</th>
+                            <th>Fev</th>
+                            <th>Mar</th>
+                            <th>Abr</th>
+                            <th>Mai</th>
+                            <th>Jun</th>
+                            <th>Jul</th>
+                            <th>Ago</th>
+                            <th>Set</th>
+                            <th>Out</th>
+                            <th>Nov</th>
+                            <th>Dez</th>
+                            <th>Média</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button class="add-row-btn" data-table="indicadores-table">Adicionar Linha</button>
+            </div>
+        </div>
+        <button id="save-btn">Salvar A3</button>
+        <button id="logout-btn">Sair</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

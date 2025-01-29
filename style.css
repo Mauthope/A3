@@ -275,3 +275,37 @@ select {
   }
 }
 
+/* Novas classes para coloração das células */
+.cell-green {
+  background-color: #90ee90 !important; /* Verde claro */
+}
+
+.cell-orange {
+  background-color: #ffa500 !important; /* Laranja */
+}
+
+.cell-red {
+  background-color: #ffb6c1 !important; /* Vermelho claro */
+}
+
+/* Garantir que as cores sejam impressas */
+@media print {
+  .cell-green {
+    background-color: #90ee90 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cell-orange {
+    background-color: #ffa500 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cell-red {
+    background-color: #ffb6c1 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+

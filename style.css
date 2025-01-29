@@ -6,16 +6,6 @@ body {
   background-color: #f0f0f0;
 }
 
-/* Container de login */
-#login-container {
-  max-width: 400px;
-  margin: 100px auto;
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 /* Container principal A3 */
 #a3-container {
   width: 297mm;
@@ -135,6 +125,7 @@ select {
   border-radius: 2px;
   box-sizing: border-box;
   font-size: 12px;
+  background-color: transparent !important; /* Deixa o fundo transparente para a cor da célula aparecer */
 }
 
 /* Seções específicas */
@@ -173,82 +164,6 @@ select {
   color: white !important;
 }
 
-/* Estilos para impressão */
-@media print {
-  @page {
-    size: A4 landscape;
-    margin: 5mm; /* Margens reduzidas para aproveitar mais espaço */
-  }
-
-  html,
-  body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: white;
-  }
-
-  #a3-container {
-    width: 100%;
-    min-height: 100%;
-    margin: 0;
-    padding: 5mm;
-    box-shadow: none;
-    overflow: visible;
-  }
-
-  .btn-adicionar,
-  .btn-remover,
-  #save-btn,
-  #logout-btn {
-    display: none;
-  }
-
-  /* Força a preservação das cores na impressão */
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    color-adjust: exact !important;
-  }
-
-  /* Ajustes específicos para tabelas na impressão */
-  table {
-    page-break-inside: auto;
-  }
-
-  tr {
-    page-break-inside: avoid;
-    page-break-after: auto;
-  }
-
-  thead {
-    display: table-header-group;
-  }
-
-  tfoot {
-    display: table-footer-group;
-  }
-
-  /* Ajuste de escala para caber na página */
-  .table-wrapper {
-    overflow: visible;
-  }
-
-  /* Garante que as cores de fundo sejam impressas */
-  th {
-    background-color: #f8f9fa !important;
-  }
-
-  .btn-adicionar {
-    background-color: #2ecc71 !important;
-  }
-
-  .btn-remover {
-    background-color: #ff4444 !important;
-  }
-}
-
 /* Layout para melhor aproveitamento do espaço */
 #requisitos-negocio,
 .situacao-container,
@@ -278,14 +193,22 @@ select {
 /* Cores para as células da tabela de Indicadores */
 .cor-verde {
   background-color: #90ee90 !important; /* Verde claro */
+  color: black !important;
 }
 
 .cor-laranja {
   background-color: #ffa500 !important; /* Laranja */
+  color: black !important;
 }
 
 .cor-vermelho {
   background-color: #ff6347 !important; /* Vermelho claro */
+  color: white !important;
+}
+
+/* Evitar pintura de células vazias */
+td:empty {
+  background-color: transparent !important;
 }
 
 /* Garantir que as cores sejam impressas */
@@ -296,5 +219,15 @@ select {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-}
 
+  .btn-adicionar,
+  .btn-remover,
+  #save-btn,
+  #logout-btn {
+    display: none;
+  }
+
+  th {
+    background-color: #f8f9fa !important;
+  }
+}

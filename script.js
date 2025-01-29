@@ -144,35 +144,46 @@ function configurarColoracaoCelulas(row) {
 }
 
 function aplicarColoracao(row) {
-  const meta = Number(row.cells[1].querySelector("input").value) || 0
-  const objFuturo = Number(row.cells[2].querySelector("input").value) || 0
+  const metaInput = row.cells[1].querySelector("input");
+  const objFuturoInput = row.cells[2].querySelector("input");
 
-  if (isNaN(meta) || isNaN(objFuturo)) return
+  if (!metaInput || !objFuturoInput) return;
 
-  const cells = Array.from(row.cells).slice(3) // Pegando as células de valores (exclui Meta e OBJ Futuro)
+  const meta = Number(metaInput.value.replace(",", ".")); // Corrige números com vírgula
+  const objFuturo = Number(objFuturoInput.value.replace(",", "."));
+
+  if (isNaN(meta) || isNaN(objFuturo)) return; // Garante que só processamos valores numéricos
+
+  const cells = Array.from(row.cells).slice(3); // Pega as colunas de valores
 
   cells.forEach((cell) => {
-    const input = cell.querySelector("input")
-    const valor = input ? Number(input.value) || 0 : Number(cell.textContent) || 0
-    if (isNaN(valor)) return
+    const input = cell.querySelector("input");
+    if (!input) return; // Ignora células sem input
 
-    let cor
-    if (objFuturo > meta) {
-      // Quando OBJ Futuro é MAIOR que a Meta
-      if (valor >= objFuturo) cor = "verde"
-      else if (valor >= meta) cor = "laranja"
-      else cor = "vermelho"
-    } else {
-      // Quando OBJ Futuro é MENOR ou IGUAL à Meta
-      if (valor <= objFuturo) cor = "verde"
-      else if (valor <= meta) cor = "laranja"
-      else cor = "vermelho"
+    const valor = Number(input.value.replace(",", "."));
+    if (isNaN(valor) || input.value.trim() === "") {
+      // Se não for número ou estiver vazio, removemos as classes e saímos
+      cell.classList.remove("cor-verde", "cor-laranja", "cor-vermelho");
+      return;
     }
 
-    // Removendo cores antigas antes de aplicar a nova
-    cell.classList.remove("cor-verde", "cor-laranja", "cor-vermelho")
-    cell.classList.add(`cor-${cor}`)
-  })
+    let cor;
+    if (objFuturo > meta) {
+      // Quando OBJ Futuro é maior que a Meta
+      if (valor >= objFuturo) cor = "verde";
+      else if (valor >= meta) cor = "laranja";
+      else cor = "vermelho";
+    } else {
+      // Quando OBJ Futuro é menor ou igual à Meta
+      if (valor <= objFuturo) cor = "verde";
+      else if (valor <= meta) cor = "laranja";
+      else cor = "vermelho";
+    }
+
+    // Remove cores antigas antes de aplicar a nova
+    cell.classList.remove("cor-verde", "cor-laranja", "cor-vermelho");
+    cell.classList.add(`cor-${cor}`);
+  });
 }
 
 

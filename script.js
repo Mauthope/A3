@@ -156,26 +156,34 @@ function aplicarColoracao(row) {
     if (isNaN(valor)) return
 
     let cor
+
     if (objFuturo > meta) {
+      // Se o OBJ Futuro for maior que a Meta, o valor deve ser maior ou igual a OBJ Futuro para ser verde
       if (valor >= objFuturo) cor = "verde"
+      // Entre o OBJ Futuro e a Meta, deve ser laranja
       else if (valor >= meta) cor = "laranja"
+      // Menor que a Meta, deve ser vermelho
       else cor = "vermelho"
     } else {
+      // Se o OBJ Futuro for menor que a Meta
       if (valor <= objFuturo) cor = "verde"
+      // Entre o OBJ Futuro e a Meta, deve ser laranja
       else if (valor <= meta) cor = "laranja"
+      // Acima da Meta, deve ser vermelho
       else cor = "vermelho"
     }
 
-    // Adicionando uma verificação extra para valores muito pequenos (menores que 1)
-    if (objFuturo < 1 && valor < 1) {
-      // Se ambos são frações menores que 1, considerar como próximos
-      cor = "verde"
+    // Corrigir o caso para valores entre 0 e 1
+    if (meta < 1 && objFuturo < 1) {
+      // Ajuste especial para quando a meta e o OBJ Futuro são menores que 1
+      if (valor >= objFuturo && valor < meta) cor = "laranja"
+      else if (valor < objFuturo) cor = "verde"
+      else if (valor >= meta) cor = "vermelho"
     }
 
     cell.className = `cor-${cor}`
   })
 }
-
 
 function salvarDados(setor) {
   const dados = {

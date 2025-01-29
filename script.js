@@ -157,28 +157,17 @@ function aplicarColoracao(row) {
 
     let cor
 
+    // Se o OBJ Futuro for maior que a Meta
     if (objFuturo > meta) {
-      // Se o OBJ Futuro for maior que a Meta, o valor deve ser maior ou igual a OBJ Futuro para ser verde
-      if (valor >= objFuturo) cor = "verde"
-      // Entre o OBJ Futuro e a Meta, deve ser laranja
-      else if (valor >= meta) cor = "laranja"
-      // Menor que a Meta, deve ser vermelho
-      else cor = "vermelho"
-    } else {
-      // Se o OBJ Futuro for menor que a Meta
-      if (valor <= objFuturo) cor = "verde"
-      // Entre o OBJ Futuro e a Meta, deve ser laranja
-      else if (valor <= meta) cor = "laranja"
-      // Acima da Meta, deve ser vermelho
-      else cor = "vermelho"
-    }
-
-    // Corrigir o caso para valores entre 0 e 1
-    if (meta < 1 && objFuturo < 1) {
-      // Ajuste especial para quando a meta e o OBJ Futuro são menores que 1
-      if (valor >= objFuturo && valor < meta) cor = "laranja"
-      else if (valor < objFuturo) cor = "verde"
-      else if (valor >= meta) cor = "vermelho"
+      if (valor >= objFuturo) cor = "verde" // valor maior ou igual ao OBJ Futuro
+      else if (valor >= meta) cor = "laranja" // valor entre a Meta e o OBJ Futuro
+      else cor = "vermelho" // valor abaixo da Meta
+    } 
+    // Se o OBJ Futuro for menor que a Meta
+    else {
+      if (valor <= objFuturo) cor = "verde" // valor menor ou igual ao OBJ Futuro
+      else if (valor <= meta) cor = "laranja" // valor entre o OBJ Futuro e a Meta
+      else cor = "vermelho" // valor acima da Meta
     }
 
     cell.className = `cor-${cor}`

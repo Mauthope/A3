@@ -1,23 +1,67 @@
+document.addEventListener("DOMContentLoaded", () => {
+  initializeEventListeners()
+})
+
 function $(id) {
   return document.getElementById(id)
 }
 
-// Funções para Requisitos de Negócio
-function adicionarTopico() {
-  const lista = document.querySelector(".requisitos-list")
+function initializeEventListeners() {
+  // Login e Logout
+  $("login-btn").addEventListener("click", handleLogin)
+  $("logout-btn").addEventListener("click", handleLogout)
+  $("save-btn").addEventListener("click", handleSave)
+
+  // Botões de adicionar
+  $("add-requisito").addEventListener("click", () => adicionarRequisito())
+  $("add-situacao-atual").addEventListener("click", () => adicionarLinha("situacao-atual-table"))
+  $("add-situacao-alvo").addEventListener("click", () => adicionarLinha("situacao-alvo-table"))
+  $("add-plano-acao").addEventListener("click", () => adicionarLinha("plano-acao-table"))
+  $("add-indicadores").addEventListener("click", () => adicionarLinha("indicadores-table"))
+}
+
+// Funções de Login/Logout
+function handleLogin() {
+  const setor = $("setor-select").value
+  if (!setor) {
+    alert("Por favor, selecione um setor.")
+    return
+  }
+
+  $("login-container").style.display = "none"
+  $("a3-container").style.display = "block"
+  $("setor-title").textContent = setor
+  carregarDados(setor)
+}
+
+function handleLogout() {
+  $("a3-container").style.display = "none"
+  $("login-container").style.display = "block"
+  $("setor-select").value = ""
+  limparFormulario()
+}
+
+function handleSave() {
+  const setor = $("setor-title").textContent
+  salvarDados(setor)
+}
+
+// Funções para Requisitos
+function adicionarRequisito() {
+  const lista = $("requisitos-list")
   const li = document.createElement("li")
   li.innerHTML = `
         <input type="text" placeholder="Digite o requisito">
-        <button class="btn-remover" onclick="removerItem(this)">Remover</button>
+        <button class="btn-remover" onclick="removerRequisito(this)">Remover</button>
     `
   lista.appendChild(li)
 }
 
-function removerItem(button) {
+function removerRequisito(button) {
   button.parentElement.remove()
 }
 
-// Funções para tabelas
+// Funções para Tabelas
 function adicionarLinha(tableId) {
   const table = $(tableId)
   const row = table.insertRow(-1)
@@ -25,195 +69,186 @@ function adicionarLinha(tableId) {
 
   for (let i = 0; i < numCols; i++) {
     const cell = row.insertCell(i)
+
     if (tableId === "plano-acao-table") {
-      if (i === 2 || i === 4) {
-        // Data de Abertura e Prazo
-        cell.innerHTML = '<input type="date">'
-      } else if (i === 5) {
-        // Status
-        cell.innerHTML = `
-                    <select>
-                        <option value="não iniciado">Não iniciado</option>
-                        <option value="em andamento">Em andamento</option>
-                        <option value="concluído">Concluído</option>
-                    </select>
-                `
-      } else {
-        cell.innerHTML = '<input type="text">'
-      }
+      cell.appendChild(criarCelulaPlanoAcao(i))
+    } else if (tableId === "indicadores-table") {
+      cell.appendChild(criarCelulaIndicadores(i, numCols))
     } else {
-      if (tableId === "indicadores-table" && i === numCols - 1) {
-        cell.textContent = "0.00" // Célula de média
-      } else {
-        cell.innerHTML = '<input type="text">'
-      }
+      cell.appendChild(criarInput())
     }
   }
 
   if (tableId === "indicadores-table") {
-    adicionarCalculoMedia(row)
+    configurarCalculoMedia(row)
   }
 }
 
-function adicionarCalculoMedia(row) {
-  const inputs = row.querySelectorAll("input")
+function criarCelulaPlanoAcao(colIndex) {
+  if (colIndex === 2 || colIndex === 4) {
+    // Data de Abertura e Prazo
+    const input = document.createElement("input")
+    input.type = "date"
+    return input
+  } else if (colIndex === 5) {
+    // Status
+    const select = document.createElement("select")
+    select.innerHTML = `
+            <option value="Não iniciado">Não iniciado</option>
+            <option value="Em andamento">Em andamento</option>
+            <option value="Concluído">Concluído</option>
+        `
+    return select
+  } else {
+    return criarInput()
+  }
+}
+
+function criarCelulaIndicadores(colIndex, numCols) {
+  if (colIndex === numCols - 1) {
+    // Última coluna (Média)
+    const span = document.createElement("span")
+    span.textContent = "0.00"
+    return span
+  } else {
+    return criarInput()
+  }
+}
+
+function criarInput() {
+  const input = document.createElement("input")
+  input.type = "text"
+  return input
+}
+
+function configurarCalculoMedia(row) {
+  const inputs = Array.from(row.cells)
+    .slice(3, -1)
+    .map((cell) => cell.querySelector("input"))
   const mediaCell = row.cells[row.cells.length - 1]
 
-  inputs.forEach((input, index) => {
-    if (index >= 3) {
-      // Começando dos meses (Jan a Dez)
-      input.addEventListener("input", () => {
-        calcularMedia(inputs, mediaCell)
-      })
-    }
+  inputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      const valores = inputs.map((inp) => Number.parseFloat(inp.value)).filter((val) => !isNaN(val))
+
+      const media = valores.length > 0 ? valores.reduce((a, b) => a + b, 0) / valores.length : 0
+
+      mediaCell.textContent = media.toFixed(2)
+    })
   })
 }
 
-function calcularMedia(inputs, mediaCell) {
-  let sum = 0
-  let count = 0
-
-  inputs.forEach((input, index) => {
-    if (index >= 3 && input.value) {
-      // Começando dos meses (Jan a Dez)
-      const valor = Number.parseFloat(input.value)
-      if (!isNaN(valor)) {
-        sum += valor
-        count++
-      }
-    }
-  })
-
-  const media = count > 0 ? sum / count : 0
-  mediaCell.textContent = media.toFixed(2)
-}
-
-// Funções de salvamento e carregamento
-function salvarDados() {
-  const setor = $("setor-title").textContent
+// Funções de Dados
+function salvarDados(setor) {
   const dados = {
-    requisitos: getRequisitos(),
+    requisitos: getRequisitosData(),
     situacaoAtual: getTableData("situacao-atual-table"),
     situacaoAlvo: getTableData("situacao-alvo-table"),
     planoAcao: getTableData("plano-acao-table"),
     indicadores: getTableData("indicadores-table"),
   }
+
   localStorage.setItem(setor, JSON.stringify(dados))
   alert("Dados salvos com sucesso!")
 }
 
-function getRequisitos() {
-  const requisitos = []
-  document.querySelectorAll(".requisitos-list input").forEach((input) => {
-    requisitos.push(input.value)
-  })
-  return requisitos
+function getRequisitosData() {
+  return Array.from($("requisitos-list").querySelectorAll("input")).map((input) => input.value)
 }
 
 function getTableData(tableId) {
-  const table = $(tableId)
-  const data = []
-  for (let i = 1; i < table.rows.length; i++) {
-    const row = table.rows[i]
-    const rowData = []
-    for (let j = 0; j < row.cells.length; j++) {
-      const cell = row.cells[j]
+  const tbody = $(tableId).querySelector("tbody")
+  return Array.from(tbody.rows).map((row) => {
+    return Array.from(row.cells).map((cell) => {
       const input = cell.querySelector("input")
       const select = cell.querySelector("select")
-      if (input) {
-        rowData.push(input.value)
-      } else if (select) {
-        rowData.push(select.value)
-      } else {
-        rowData.push(cell.textContent)
-      }
-    }
-    data.push(rowData)
-  }
-  return data
+      const span = cell.querySelector("span")
+
+      if (input) return input.value
+      if (select) return select.value
+      if (span) return span.textContent
+      return cell.textContent
+    })
+  })
 }
 
 function carregarDados(setor) {
-  const dados = localStorage.getItem(setor)
-  if (dados) {
-    const parsedDados = JSON.parse(dados)
+  const dadosSalvos = localStorage.getItem(setor)
+  if (!dadosSalvos) return
 
-    // Carregar requisitos
-    document.querySelector(".requisitos-list").innerHTML = ""
-    parsedDados.requisitos.forEach((requisito) => {
-      const li = document.createElement("li")
-      li.innerHTML = `
-                <input type="text" value="${requisito}">
-                <button class="btn-remover" onclick="removerItem(this)">Remover</button>
-            `
-      document.querySelector(".requisitos-list").appendChild(li)
-    })
+  const dados = JSON.parse(dadosSalvos)
 
-    // Carregar tabelas
-    carregarTabela("situacao-atual-table", parsedDados.situacaoAtual)
-    carregarTabela("situacao-alvo-table", parsedDados.situacaoAlvo)
-    carregarTabela("plano-acao-table", parsedDados.planoAcao)
-    carregarTabela("indicadores-table", parsedDados.indicadores)
-  }
+  // Carregar requisitos
+  $("requisitos-list").innerHTML = ""
+  dados.requisitos.forEach((requisito) => {
+    const li = document.createElement("li")
+    li.innerHTML = `
+            <input type="text" value="${requisito}">
+            <button class="btn-remover" onclick="removerRequisito(this)">Remover</button>
+        `
+    $("requisitos-list").appendChild(li)
+  })
+
+  // Carregar tabelas
+  carregarTabela("situacao-atual-table", dados.situacaoAtual)
+  carregarTabela("situacao-alvo-table", dados.situacaoAlvo)
+  carregarTabela("plano-acao-table", dados.planoAcao)
+  carregarTabela("indicadores-table", dados.indicadores)
 }
 
 function carregarTabela(tableId, dados) {
-  const table = $(tableId)
-  table.querySelector("tbody").innerHTML = ""
+  const tbody = $(tableId).querySelector("tbody")
+  tbody.innerHTML = ""
+
   dados.forEach((rowData) => {
-    const row = table.insertRow(-1)
+    const row = tbody.insertRow()
     rowData.forEach((cellData, index) => {
-      const cell = row.insertCell(index)
+      const cell = row.insertCell()
       if (tableId === "plano-acao-table") {
-        if (index === 2 || index === 4) {
-          // Data de Abertura e Prazo
-          cell.innerHTML = `<input type="date" value="${cellData}">`
-        } else if (index === 5) {
-          // Status
-          cell.innerHTML = `
-                        <select>
-                            <option value="não iniciado" ${cellData === "não iniciado" ? "selected" : ""}>Não iniciado</option>
-                            <option value="em andamento" ${cellData === "em andamento" ? "selected" : ""}>Em andamento</option>
-                            <option value="concluído" ${cellData === "concluído" ? "selected" : ""}>Concluído</option>
-                        </select>
-                    `
-        } else {
-          cell.innerHTML = `<input type="text" value="${cellData}">`
-        }
+        cell.appendChild(criarCelulaPlanoAcaoComDado(index, cellData))
+      } else if (tableId === "indicadores-table" && index === rowData.length - 1) {
+        const span = document.createElement("span")
+        span.textContent = cellData
+        cell.appendChild(span)
       } else {
-        if (tableId === "indicadores-table" && index === rowData.length - 1) {
-          cell.textContent = cellData
-        } else {
-          cell.innerHTML = `<input type="text" value="${cellData}">`
-        }
+        const input = criarInput()
+        input.value = cellData
+        cell.appendChild(input)
       }
     })
+
     if (tableId === "indicadores-table") {
-      adicionarCalculoMedia(row)
+      configurarCalculoMedia(row)
     }
   })
 }
 
-// Event Listeners
-document.addEventListener("DOMContentLoaded", () => {
-  $("login-btn").addEventListener("click", () => {
-    const setor = $("setor-select").value
-    if (setor) {
-      $("login-container").style.display = "none"
-      $("a3-container").style.display = "block"
-      $("setor-title").textContent = setor
-      carregarDados(setor)
-    } else {
-      alert("Por favor, selecione um setor.")
-    }
-  })
+function criarCelulaPlanoAcaoComDado(colIndex, valor) {
+  if (colIndex === 2 || colIndex === 4) {
+    const input = document.createElement("input")
+    input.type = "date"
+    input.value = valor
+    return input
+  } else if (colIndex === 5) {
+    const select = document.createElement("select")
+    select.innerHTML = `
+            <option value="Não iniciado">Não iniciado</option>
+            <option value="Em andamento">Em andamento</option>
+            <option value="Concluído">Concluído</option>
+        `
+    select.value = valor
+    return select
+  } else {
+    const input = criarInput()
+    input.value = valor
+    return input
+  }
+}
 
-  $("save-btn").addEventListener("click", salvarDados)
-
-  $("logout-btn").addEventListener("click", () => {
-    $("a3-container").style.display = "none"
-    $("login-container").style.display = "block"
-    $("setor-select").value = ""
+function limparFormulario() {
+  $("requisitos-list").innerHTML = ""
+  ;["situacao-atual-table", "situacao-alvo-table", "plano-acao-table", "indicadores-table"].forEach((tableId) => {
+    $(tableId).querySelector("tbody").innerHTML = ""
   })
-})
+}
 

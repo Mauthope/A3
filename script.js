@@ -144,16 +144,18 @@ function configurarColoracaoCelulas(row) {
 }
 
 function aplicarColoracao(row) {
-  // Substitui a vírgula por ponto antes de converter para número
-  const meta = Number.parseFloat(row.cells[1].querySelector("input").value.replace(",", "."))
-  const objFuturo = Number.parseFloat(row.cells[2].querySelector("input").value.replace(",", "."))
+  // Substitui a vírgula por ponto antes de realizar o parseFloat
+  const meta = parseFloat(row.cells[1].querySelector("input").value.replace(",", "."))
+  const objFuturo = parseFloat(row.cells[2].querySelector("input").value.replace(",", "."))
 
+  // Verifica se ambos os valores são números válidos
   if (isNaN(meta) || isNaN(objFuturo)) return
 
   const cells = Array.from(row.cells).slice(3) // Jan até Média
 
   cells.forEach((cell) => {
-    const valor = Number.parseFloat((cell.querySelector("input")?.value || cell.textContent).replace(",", "."))
+    // Substitui a vírgula por ponto antes de realizar o parseFloat
+    const valor = parseFloat((cell.querySelector("input")?.value || cell.textContent).replace(",", "."))
     if (isNaN(valor)) return
 
     let cor
@@ -174,6 +176,7 @@ function aplicarColoracao(row) {
     cell.className = `cor-${cor}`
   })
 }
+
 
 function salvarDados(setor) {
   const dados = {

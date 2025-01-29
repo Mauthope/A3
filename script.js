@@ -141,9 +141,7 @@ function criarCelulaIndicadores(colIndex, numCols) {
 
 function criarInput() {
   const input = document.createElement("input")
-  input.type = "number"
-  input.step = "0.01" // Permite incrementos de 0.01
-  input.min = "0" // Opcional: define um valor mínimo
+  input.type = "text"
   return input
 }
 
@@ -171,8 +169,8 @@ function calcularMedia(row) {
   const mediaCell = row.cells[row.cells.length - 1].querySelector("span")
   mediaCell.textContent = media.toFixed(2)
 
-  const meta = Number.parseFloat(row.cells[1].querySelector("input").value)
-  const objFuturo = Number.parseFloat(row.cells[2].querySelector("input").value)
+  const meta = row.cells[1].querySelector("input").value
+  const objFuturo = row.cells[2].querySelector("input").value
   aplicarCorCelula(mediaCell.parentNode, media, meta, objFuturo)
 }
 
@@ -187,19 +185,18 @@ function aplicarCorCelula(cell, valor, meta, objFuturo) {
 
   cell.classList.remove("cell-green", "cell-orange", "cell-red")
 
-  // Usamos toFixed(2) para comparar com precisão de duas casas decimais
-  if (Number.parseFloat(objFuturo.toFixed(2)) > Number.parseFloat(meta.toFixed(2))) {
-    if (Number.parseFloat(valor.toFixed(2)) >= Number.parseFloat(objFuturo.toFixed(2))) {
+  if (objFuturo > meta) {
+    if (valor >= objFuturo) {
       cell.classList.add("cell-green")
-    } else if (Number.parseFloat(valor.toFixed(2)) >= Number.parseFloat(meta.toFixed(2))) {
+    } else if (valor >= meta) {
       cell.classList.add("cell-orange")
     } else {
       cell.classList.add("cell-red")
     }
   } else {
-    if (Number.parseFloat(valor.toFixed(2)) <= Number.parseFloat(objFuturo.toFixed(2))) {
+    if (valor <= objFuturo) {
       cell.classList.add("cell-green")
-    } else if (Number.parseFloat(valor.toFixed(2)) <= Number.parseFloat(meta.toFixed(2))) {
+    } else if (valor <= meta) {
       cell.classList.add("cell-orange")
     } else {
       cell.classList.add("cell-red")

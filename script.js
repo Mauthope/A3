@@ -158,11 +158,11 @@ function aplicarColoracao(row) {
     let cor
     if (objFuturo > meta) {
       if (valor >= objFuturo) cor = "verde"
-      else if (valor >= meta && valor < objFuturo) cor = "laranja"
+      else if (valor >= meta) cor = "laranja"
       else cor = "vermelho"
     } else {
       if (valor <= objFuturo) cor = "verde"
-      else if (valor > objFuturo && valor <= meta) cor = "laranja"
+      else if (valor <= meta) cor = "laranja"
       else cor = "vermelho"
     }
 

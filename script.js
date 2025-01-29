@@ -96,12 +96,24 @@ function criarCelulaPlanoAcao(colIndex) {
         `
     return select
   } else if (colIndex === 6) { // Supondo que o índice 6 seja a célula de "Evidência"
-    // Cria um hyperlink (campo "Evidência")
-    const link = document.createElement("a")
-    link.href = "#" // Defina o href conforme necessário, ou deixe vazio
-    link.textContent = "Clique aqui"
-    link.target = "_blank" // Se quiser abrir o link em uma nova aba
-    return link
+    // Cria um input de texto para o campo de "Evidência"
+    const input = document.createElement("input")
+    input.type = "text"
+    input.placeholder = "Digite a URL"
+    
+    // Adiciona o evento para transformar o texto em um hyperlink
+    input.addEventListener("blur", () => {
+      const url = input.value.trim()
+      if (url) {
+        const link = document.createElement("a")
+        link.href = url
+        link.textContent = url
+        link.target = "_blank" // Abre em uma nova aba
+        input.replaceWith(link) // Substitui o input pelo link
+      }
+    })
+    
+    return input
   } else {
     return criarInput()
   }

@@ -18,13 +18,14 @@ body {
 
 /* Container principal A3 */
 #a3-container {
-  width: 297mm; /* Largura de uma página A4 em paisagem */
-  height: 210mm; /* Altura de uma página A4 em paisagem */
+  width: 297mm;
+  min-height: 210mm;
   margin: 20px auto;
   padding: 10mm;
   background-color: white;
   box-sizing: border-box;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-x: auto; /* Permite rolagem horizontal se necessário */
 }
 
 /* Títulos */
@@ -36,6 +37,7 @@ h1 {
 h2 {
   font-size: 18px;
   margin-bottom: 10px;
+  color: #333;
 }
 
 /* Lista de requisitos */
@@ -67,16 +69,18 @@ h2 {
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 .btn-remover {
-  background-color: #ff4444;
-  color: white;
+  background-color: #ff4444 !important;
+  color: white !important;
 }
 
 .btn-adicionar {
-  background-color: #2ecc71;
-  color: white;
+  background-color: #2ecc71 !important;
+  color: white !important;
   margin-top: 5px;
 }
 
@@ -100,16 +104,25 @@ table {
   font-size: 12px;
 }
 
+/* Wrapper para tabelas com scroll horizontal */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 15px;
+}
+
 th,
 td {
   border: 1px solid #ddd;
   padding: 5px;
   text-align: left;
+  min-width: 80px; /* Largura mínima para células */
 }
 
 th {
-  background-color: #f8f9fa;
+  background-color: #f8f9fa !important;
   font-weight: bold;
+  color: #333 !important;
 }
 
 /* Inputs e selects dentro das tabelas */
@@ -146,30 +159,43 @@ select {
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 #save-btn {
-  background-color: #2ecc71;
-  color: white;
+  background-color: #2ecc71 !important;
+  color: white !important;
 }
 
 #logout-btn {
-  background-color: #ff4444;
-  color: white;
+  background-color: #ff4444 !important;
+  color: white !important;
 }
 
 /* Estilos para impressão */
 @media print {
+  @page {
+    size: A4 landscape;
+    margin: 5mm; /* Margens reduzidas para aproveitar mais espaço */
+  }
+
+  html,
   body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     background-color: white;
   }
 
   #a3-container {
     width: 100%;
-    height: 100%;
-    padding: 0;
+    min-height: 100%;
     margin: 0;
+    padding: 5mm;
     box-shadow: none;
+    overflow: visible;
   }
 
   .btn-adicionar,
@@ -179,16 +205,47 @@ select {
     display: none;
   }
 
-  /* Manter as cores na impressão */
+  /* Força a preservação das cores na impressão */
   * {
     -webkit-print-color-adjust: exact !important;
-    color-adjust: exact !important;
     print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
-  @page {
-    size: A4 landscape;
-    margin: 10mm;
+  /* Ajustes específicos para tabelas na impressão */
+  table {
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+
+  /* Ajuste de escala para caber na página */
+  .table-wrapper {
+    overflow: visible;
+  }
+
+  /* Garante que as cores de fundo sejam impressas */
+  th {
+    background-color: #f8f9fa !important;
+  }
+
+  .btn-adicionar {
+    background-color: #2ecc71 !important;
+  }
+
+  .btn-remover {
+    background-color: #ff4444 !important;
   }
 }
 
@@ -198,5 +255,23 @@ select {
 .plano-acao,
 .indicadores {
   margin-bottom: 20px;
+}
+
+/* Ajustes para telas pequenas */
+@media screen and (max-width: 297mm) {
+  #a3-container {
+    width: 100%;
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .situacao-container {
+    flex-direction: column;
+  }
+
+  .situacao-atual,
+  .situacao-alvo {
+    width: 100%;
+  }
 }
 

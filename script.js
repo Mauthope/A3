@@ -94,7 +94,7 @@ function criarCelulaPlanoAcao(colIndex) {
             <option value="Em andamento">Em andamento</option>
             <option value="Concluído">Concluído</option>
         `
-    // Adiciona evento para aplicar a coloração
+    // Adiciona evento para aplicar a coloração e atualizar o status
     select.addEventListener("change", () => aplicarColoracaoStatus(select))
     return select
   } else if (colIndex === 6) { // Supondo que o índice 6 seja a célula de "Evidência"

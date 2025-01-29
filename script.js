@@ -282,4 +282,3 @@ function limparFormulario() {
     $(tableId).querySelector("tbody").innerHTML = ""
   })
 }
-

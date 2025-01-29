@@ -95,10 +95,18 @@ function criarCelulaPlanoAcao(colIndex) {
             <option value="Concluído">Concluído</option>
         `
     return select
+  } else if (colIndex === 6) { // Supondo que o índice 6 seja a célula de "Evidência"
+    // Cria um hyperlink (campo "Evidência")
+    const link = document.createElement("a")
+    link.href = "#" // Defina o href conforme necessário, ou deixe vazio
+    link.textContent = "Clique aqui"
+    link.target = "_blank" // Se quiser abrir o link em uma nova aba
+    return link
   } else {
     return criarInput()
   }
 }
+
 
 function criarCelulaIndicadores(colIndex, numCols) {
   if (colIndex === numCols - 1) {

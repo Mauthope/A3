@@ -94,35 +94,41 @@ function criarCelulaPlanoAcao(colIndex) {
             <option value="Em andamento">Em andamento</option>
             <option value="Concluído">Concluído</option>
         `
+    select.addEventListener("change", () => aplicarColoracaoStatus(select))
+
     return select
-  } else if (colIndex === 6) { // Supondo que o índice 6 seja a célula de "Evidência"
-    // Cria um campo de texto normal, em branco
-    const input = document.createElement("input")
-    input.type = "text"
-    input.placeholder = "Cole a URL aqui"
-    
-    // Quando o valor for alterado, verificar se é uma URL e converter em hyperlink
-    input.addEventListener("input", () => {
-      const url = input.value
-      // Verifica se o texto colado é uma URL válida
-      const isValidUrl = url.match(/^https?:\/\/[^\s$.?#].[^\s]*$/i) 
-      if (isValidUrl) {
-        // Cria o hyperlink
-        const link = document.createElement("a")
-        link.href = url
-        link.textContent = "Clique aqui"
-        link.target = "_blank" // Abre o link em uma nova aba
-        // Substitui o campo de texto pelo link
-        input.replaceWith(link)
-      }
-    })
-    
-    return input
   } else {
     return criarInput()
   }
 }
 
+function aplicarColoracaoStatus(select) {
+  const cell = select.closest("td")  // A célula que contém o campo select
+  const status = select.value
+  const prazoInput = select.closest("tr").cells[4].querySelector("input")  // A célula da data de prazo
+  const prazo = prazoInput ? new Date(prazoInput.value) : null
+  const hoje = new Date()
+
+  // Definir cor e texto com base no status
+  if (status === "Em andamento") {
+    cell.style.backgroundColor = "blue"
+    cell.style.color = "white"
+  } else if (status === "Concluído") {
+    cell.style.backgroundColor = "green"
+    cell.style.color = "white"
+  } else {
+    cell.style.backgroundColor = ""  // Se estiver em "Não iniciado" ou outro status
+    cell.style.color = ""
+  }
+
+  // Se a data de prazo estiver ultrapassada, mudar o status e a cor
+  if (prazo && prazo < hoje && status !== "Concluído") {
+    select.value = "Atrasado"  // Atualiza o status para "Atrasado"
+    cell.style.backgroundColor = "red"
+    cell.style.color = "white"
+    select.disabled = true  // Desabilita a edição do status após estar "Atrasado"
+  }
+}
 
 
 function criarCelulaIndicadores(colIndex, numCols) {

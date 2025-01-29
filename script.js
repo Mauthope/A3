@@ -96,7 +96,7 @@ function criarCelulaPlanoAcao(colIndex) {
         `
     return select
   } else if (colIndex === 6) { // Supondo que o índice 6 seja a célula de "Evidência"
-    // Cria um campo de texto normal
+    // Cria um campo de texto normal, em branco
     const input = document.createElement("input")
     input.type = "text"
     input.placeholder = "Cole a URL aqui"
@@ -122,6 +122,7 @@ function criarCelulaPlanoAcao(colIndex) {
     return criarInput()
   }
 }
+
 
 
 function criarCelulaIndicadores(colIndex, numCols) {

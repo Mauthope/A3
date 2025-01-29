@@ -1,148 +1,354 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard A3</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="login-container">
-        <h1>Login do Sistema A3</h1>
-        <select id="setor-select">
-            <option value="">Selecione o setor</option>
-            <option value="Laminação">Laminação</option>
-            <option value="Impressão">Impressão</option>
-            <option value="Acabamento">Acabamento</option>
-            <option value="Soldada">Soldada</option>
-            <option value="Corte BB">Corte BB</option>
-            <option value="Corte e Solda">Corte e Solda</option>
-            <option value="Carimbadeira">Carimbadeira</option>
-            <option value="Logística">Logística</option>
-            <option value="Apontamento">Apontamento</option>
-            <option value="Expedição">Expedição</option>
-            <option value="Manutenção">Manutenção</option>
-        </select>
-        <button id="login-btn" class="btn-adicionar">Entrar</button>
-    </div>
+document.addEventListener("DOMContentLoaded", () => {
+  initializeEventListeners()
+})
 
-    <div id="a3-container" style="display: none;">
-        <h1>Dashboard A3 - <span id="setor-title"></span></h1>
-        
-        <section id="requisitos-negocio">
-            <h2>Requisitos de Negócio</h2>
-            <div class="requisitos-wrapper">
-                <ul id="requisitos-list" class="requisitos-list">
-                    <!-- Requisitos serão adicionados dinamicamente -->
-                </ul>
-            </div>
-            <button id="add-requisito" class="btn-adicionar">Adicionar Tópico</button>
-        </section>
+function $(id) {
+  return document.getElementById(id)
+}
 
-        <div class="situacao-container">
-            <div class="situacao-atual">
-                <h2>Situação Atual</h2>
-                <div class="table-wrapper">
-                    <table id="situacao-atual-table">
-                        <thead>
-                            <tr>
-                                <th>Indicadores</th>
-                                <th>Meta</th>
-                                <th>OBJ. Futuro</th>
-                                <th>Realizado ano anterior</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Linhas serão adicionadas dinamicamente -->
-                        </tbody>
-                    </table>
-                </div>
-                <button class="btn-adicionar" id="add-situacao-atual">Adicionar Linha</button>
-            </div>
+function initializeEventListeners() {
+  // Login e Logout
+  $("login-btn").addEventListener("click", handleLogin)
+  $("logout-btn").addEventListener("click", handleLogout)
+  $("save-btn").addEventListener("click", handleSave)
 
-            <div class="situacao-alvo">
-                <h2>Situação Alvo</h2>
-                <div class="table-wrapper">
-                    <table id="situacao-alvo-table">
-                        <thead>
-                            <tr>
-                                <th>Indicadores</th>
-                                <th>Meta</th>
-                                <th>OBJ. Futuro</th>
-                                <th>Realizado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Linhas serão adicionadas dinamicamente -->
-                        </tbody>
-                    </table>
-                </div>
-                <button class="btn-adicionar" id="add-situacao-alvo">Adicionar Linha</button>
-            </div>
-        </div>
+  // Botões de adicionar
+  $("add-requisito").addEventListener("click", () => adicionarRequisito())
+  $("add-situacao-atual").addEventListener("click", () => adicionarLinha("situacao-atual-table"))
+  $("add-situacao-alvo").addEventListener("click", () => adicionarLinha("situacao-alvo-table"))
+  $("add-plano-acao").addEventListener("click", () => adicionarLinha("plano-acao-table"))
+  $("add-indicadores").addEventListener("click", () => adicionarLinha("indicadores-table"))
+}
 
-        <section class="plano-acao">
-            <h2>Plano de Ação</h2>
-            <div class="table-wrapper">
-                <table id="plano-acao-table">
-                    <thead>
-                        <tr>
-                            <th class="col-acao">Ação</th>
-                            <th>Indicadores Alvo</th>
-                            <th>Data de Abertura</th>
-                            <th>Responsável</th>
-                            <th>Prazo</th>
-                            <th>Status</th>
-                            <th>Evidência</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Linhas serão adicionadas dinamicamente -->
-                    </tbody>
-                </table>
-            </div>
-            <button class="btn-adicionar" id="add-plano-acao">Adicionar Linha</button>
-        </section>
+// Funções de Login/Logout
+function handleLogin() {
+  const setor = $("setor-select").value
+  if (!setor) {
+    alert("Por favor, selecione um setor.")
+    return
+  }
 
-        <section class="indicadores">
-            <h2>Indicadores</h2>
-            <div class="table-wrapper">
-                <table id="indicadores-table">
-                    <thead>
-                        <tr>
-                            <th>Indicadores</th>
-                            <th>Meta</th>
-                            <th>OBJ Futuro</th>
-                            <th>Jan</th>
-                            <th>Fev</th>
-                            <th>Mar</th>
-                            <th>Abr</th>
-                            <th>Mai</th>
-                            <th>Jun</th>
-                            <th>Jul</th>
-                            <th>Ago</th>
-                            <th>Set</th>
-                            <th>Out</th>
-                            <th>Nov</th>
-                            <th>Dez</th>
-                            <th>Média</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Linhas serão adicionadas dinamicamente -->
-                    </tbody>
-                </table>
-            </div>
-            <button class="btn-adicionar" id="add-indicadores">Adicionar Linha</button>
-        </section>
+  $("login-container").style.display = "none"
+  $("a3-container").style.display = "block"
+  $("setor-title").textContent = setor
+  carregarDados(setor)
+}
 
-        <div class="actions">
-            <button id="save-btn">Salvar A3</button>
-            <button id="logout-btn">Sair</button>
-        </div>
-    </div>
+function handleLogout() {
+  $("a3-container").style.display = "none"
+  $("login-container").style.display = "block"
+  $("setor-select").value = ""
+  limparFormulario()
+}
 
-    <script src="script.js"></script>
-</body>
-</html>
+function handleSave() {
+  const setor = $("setor-title").textContent
+  salvarDados(setor)
+}
+
+// Funções para Requisitos
+function adicionarRequisito() {
+  const lista = $("requisitos-list")
+  const li = document.createElement("li")
+  li.innerHTML = `
+        <input type="text" placeholder="Digite o requisito">
+        <button class="btn-remover" onclick="removerRequisito(this)">Remover</button>
+    `
+  lista.appendChild(li)
+}
+
+function removerRequisito(button) {
+  button.parentElement.remove()
+}
+
+// Funções para Tabelas
+function adicionarLinha(tableId) {
+  const table = $(tableId)
+  const row = table.insertRow(-1)
+  const numCols = table.rows[0].cells.length
+
+  for (let i = 0; i < numCols; i++) {
+    const cell = row.insertCell(i)
+
+    if (tableId === "plano-acao-table") {
+      cell.appendChild(criarCelulaPlanoAcao(i))
+    } else if (tableId === "indicadores-table") {
+      if (i >= 3 && i < numCols - 1) {
+        // Células de Jan a Dez
+        const input = criarInput()
+        input.addEventListener("input", function () {
+          const meta = row.cells[1].querySelector("input").value
+          const objFuturo = row.cells[2].querySelector("input").value
+          aplicarCorCelula(this.parentNode, this.value, meta, objFuturo)
+          calcularMedia(row)
+        })
+        cell.appendChild(input)
+      } else if (i === numCols - 1) {
+        // Célula de Média
+        const span = document.createElement("span")
+        span.textContent = "0.00"
+        cell.appendChild(span)
+      } else {
+        const input = criarInput()
+        if (i === 1 || i === 2) {
+          // Meta e OBJ Futuro
+          input.addEventListener("input", () => {
+            atualizarCoresLinha(row)
+          })
+        }
+        cell.appendChild(input)
+      }
+    } else {
+      cell.appendChild(criarInput())
+    }
+  }
+
+  if (tableId === "indicadores-table") {
+    configurarCalculoMedia(row)
+  }
+}
+
+function criarCelulaPlanoAcao(colIndex) {
+  if (colIndex === 2 || colIndex === 4) {
+    // Data de Abertura e Prazo
+    const input = document.createElement("input")
+    input.type = "date"
+    return input
+  } else if (colIndex === 5) {
+    // Status
+    const select = document.createElement("select")
+    select.innerHTML = `
+            <option value="Não iniciado">Não iniciado</option>
+            <option value="Em andamento">Em andamento</option>
+            <option value="Concluído">Concluído</option>
+        `
+    return select
+  } else {
+    return criarInput()
+  }
+}
+
+function criarCelulaIndicadores(colIndex, numCols) {
+  if (colIndex === numCols - 1) {
+    // Última coluna (Média)
+    const span = document.createElement("span")
+    span.textContent = "0.00"
+    return span
+  } else {
+    return criarInput()
+  }
+}
+
+function criarInput() {
+  const input = document.createElement("input")
+  input.type = "text"
+  return input
+}
+
+function configurarCalculoMedia(row) {
+  const inputs = Array.from(row.cells)
+    .slice(3, -1)
+    .map((cell) => cell.querySelector("input"))
+  const mediaCell = row.cells[row.cells.length - 1].querySelector("span")
+
+  inputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      calcularMedia(row)
+    })
+  })
+}
+
+function calcularMedia(row) {
+  const inputs = Array.from(row.cells)
+    .slice(3, -1)
+    .map((cell) => cell.querySelector("input"))
+  const valores = inputs.map((inp) => Number.parseFloat(inp.value)).filter((val) => !isNaN(val))
+
+  const media = valores.length > 0 ? valores.reduce((a, b) => a + b, 0) / valores.length : 0
+
+  const mediaCell = row.cells[row.cells.length - 1].querySelector("span")
+  mediaCell.textContent = media.toFixed(2)
+
+  const meta = row.cells[1].querySelector("input").value
+  const objFuturo = row.cells[2].querySelector("input").value
+  aplicarCorCelula(mediaCell.parentNode, media, meta, objFuturo)
+}
+
+function aplicarCorCelula(cell, valor, meta, objFuturo) {
+  valor = Number.parseFloat(valor)
+  meta = Number.parseFloat(meta)
+  objFuturo = Number.parseFloat(objFuturo)
+
+  if (isNaN(valor) || isNaN(meta) || isNaN(objFuturo)) {
+    return // Não aplica cor se algum valor não for número
+  }
+
+  cell.classList.remove("cell-green", "cell-orange", "cell-red")
+
+  if (objFuturo > meta) {
+    if (valor >= objFuturo) {
+      cell.classList.add("cell-green")
+    } else if (valor >= meta) {
+      cell.classList.add("cell-orange")
+    } else {
+      cell.classList.add("cell-red")
+    }
+  } else {
+    if (valor <= objFuturo) {
+      cell.classList.add("cell-green")
+    } else if (valor <= meta) {
+      cell.classList.add("cell-orange")
+    } else {
+      cell.classList.add("cell-red")
+    }
+  }
+}
+
+function atualizarCoresLinha(row) {
+  const meta = row.cells[1].querySelector("input").value
+  const objFuturo = row.cells[2].querySelector("input").value
+  for (let i = 3; i < row.cells.length - 1; i++) {
+    const input = row.cells[i].querySelector("input")
+    aplicarCorCelula(input.parentNode, input.value, meta, objFuturo)
+  }
+}
+
+// Funções de Dados
+function salvarDados(setor) {
+  const dados = {
+    requisitos: getRequisitosData(),
+    situacaoAtual: getTableData("situacao-atual-table"),
+    situacaoAlvo: getTableData("situacao-alvo-table"),
+    planoAcao: getTableData("plano-acao-table"),
+    indicadores: getTableData("indicadores-table"),
+  }
+
+  localStorage.setItem(setor, JSON.stringify(dados))
+  alert("Dados salvos com sucesso!")
+}
+
+function getRequisitosData() {
+  return Array.from($("requisitos-list").querySelectorAll("input")).map((input) => input.value)
+}
+
+function getTableData(tableId) {
+  const tbody = $(tableId).querySelector("tbody")
+  return Array.from(tbody.rows).map((row) => {
+    return Array.from(row.cells).map((cell) => {
+      const input = cell.querySelector("input")
+      const select = cell.querySelector("select")
+      const span = cell.querySelector("span")
+
+      if (input) return input.value
+      if (select) return select.value
+      if (span) return span.textContent
+      return cell.textContent
+    })
+  })
+}
+
+function carregarDados(setor) {
+  const dadosSalvos = localStorage.getItem(setor)
+  if (!dadosSalvos) return
+
+  const dados = JSON.parse(dadosSalvos)
+
+  // Carregar requisitos
+  $("requisitos-list").innerHTML = ""
+  dados.requisitos.forEach((requisito) => {
+    const li = document.createElement("li")
+    li.innerHTML = `
+            <input type="text" value="${requisito}">
+            <button class="btn-remover" onclick="removerRequisito(this)">Remover</button>
+        `
+    $("requisitos-list").appendChild(li)
+  })
+
+  // Carregar tabelas
+  carregarTabela("situacao-atual-table", dados.situacaoAtual)
+  carregarTabela("situacao-alvo-table", dados.situacaoAlvo)
+  carregarTabela("plano-acao-table", dados.planoAcao)
+  carregarTabela("indicadores-table", dados.indicadores)
+}
+
+function carregarTabela(tableId, dados) {
+  const tbody = $(tableId).querySelector("tbody")
+  tbody.innerHTML = ""
+
+  dados.forEach((rowData) => {
+    const row = tbody.insertRow()
+    rowData.forEach((cellData, index) => {
+      const cell = row.insertCell()
+      if (tableId === "plano-acao-table") {
+        cell.appendChild(criarCelulaPlanoAcaoComDado(index, cellData))
+      } else if (tableId === "indicadores-table") {
+        if (index >= 3 && index < rowData.length - 1) {
+          // Células de Jan a Dez
+          const input = criarInput()
+          input.value = cellData
+          input.addEventListener("input", function () {
+            const meta = row.cells[1].querySelector("input").value
+            const objFuturo = row.cells[2].querySelector("input").value
+            aplicarCorCelula(this.parentNode, this.value, meta, objFuturo)
+            calcularMedia(row)
+          })
+          cell.appendChild(input)
+        } else if (index === rowData.length - 1) {
+          // Célula de Média
+          const span = document.createElement("span")
+          span.textContent = cellData
+          cell.appendChild(span)
+        } else {
+          const input = criarInput()
+          input.value = cellData
+          if (index === 1 || index === 2) {
+            // Meta e OBJ Futuro
+            input.addEventListener("input", () => {
+              atualizarCoresLinha(row)
+            })
+          }
+          cell.appendChild(input)
+        }
+      } else {
+        const input = criarInput()
+        input.value = cellData
+        cell.appendChild(input)
+      }
+    })
+
+    if (tableId === "indicadores-table") {
+      configurarCalculoMedia(row)
+      atualizarCoresLinha(row)
+    }
+  })
+}
+
+function criarCelulaPlanoAcaoComDado(colIndex, valor) {
+  if (colIndex === 2 || colIndex === 4) {
+    const input = document.createElement("input")
+    input.type = "date"
+    input.value = valor
+    return input
+  } else if (colIndex === 5) {
+    const select = document.createElement("select")
+    select.innerHTML = `
+            <option value="Não iniciado">Não iniciado</option>
+            <option value="Em andamento">Em andamento</option>
+            <option value="Concluído">Concluído</option>
+        `
+    select.value = valor
+    return select
+  } else {
+    const input = criarInput()
+    input.value = valor
+    return input
+  }
+}
+
+function limparFormulario() {
+  $("requisitos-list").innerHTML = ""
+  ;["situacao-atual-table", "situacao-alvo-table", "plano-acao-table", "indicadores-table"].forEach((tableId) => {
+    $(tableId).querySelector("tbody").innerHTML = ""
+  })
+}
 

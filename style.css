@@ -130,6 +130,13 @@ select {
   margin-bottom: 15px;
 }
 
+/* Ajuste para o campo Ação no Plano de Ação */
+#plano-acao-table td:first-child {
+  white-space: normal;
+  word-wrap: break-word;
+  min-width: 200px;
+}
+
 /* Botões de ação */
 #save-btn,
 #logout-btn {
@@ -172,24 +179,24 @@ select {
     display: none;
   }
 
+  /* Manter as cores na impressão */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
   @page {
     size: A4 landscape;
     margin: 10mm;
   }
 }
 
-/* Layout flexível para melhor aproveitamento do espaço */
-.flex-container {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-#requisitos-negocio {
-  flex: 1;
-}
-
-.situacao-container {
-  flex: 2;
+/* Layout para melhor aproveitamento do espaço */
+#requisitos-negocio,
+.situacao-container,
+.plano-acao,
+.indicadores {
+  margin-bottom: 20px;
 }
 

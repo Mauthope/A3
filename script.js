@@ -96,21 +96,24 @@ function criarCelulaPlanoAcao(colIndex) {
         `
     return select
   } else if (colIndex === 6) { // Supondo que o índice 6 seja a célula de "Evidência"
-    // Cria um input para o usuário colar a URL
+    // Cria um campo de texto normal
     const input = document.createElement("input")
-    input.type = "url"
+    input.type = "text"
     input.placeholder = "Cole a URL aqui"
     
-    // Quando o valor da URL for alterado, converta em um hyperlink
+    // Quando o valor for alterado, verificar se é uma URL e converter em hyperlink
     input.addEventListener("input", () => {
       const url = input.value
-      const isValidUrl = url.match(/^https?:\/\/[^\s$.?#].[^\s]*$/i) // Validação simples de URL
+      // Verifica se o texto colado é uma URL válida
+      const isValidUrl = url.match(/^https?:\/\/[^\s$.?#].[^\s]*$/i) 
       if (isValidUrl) {
+        // Cria o hyperlink
         const link = document.createElement("a")
         link.href = url
-        link.textContent = url
+        link.textContent = "Clique aqui"
         link.target = "_blank" // Abre o link em uma nova aba
-        input.replaceWith(link) // Substitui o input pelo link
+        // Substitui o campo de texto pelo link
+        input.replaceWith(link)
       }
     })
     
@@ -119,6 +122,7 @@ function criarCelulaPlanoAcao(colIndex) {
     return criarInput()
   }
 }
+
 
 function criarCelulaIndicadores(colIndex, numCols) {
   if (colIndex === numCols - 1) {

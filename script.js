@@ -7,12 +7,10 @@ function $(id) {
 }
 
 function initializeEventListeners() {
-  // Login e Logout
   $("login-btn").addEventListener("click", handleLogin)
   $("logout-btn").addEventListener("click", handleLogout)
   $("save-btn").addEventListener("click", handleSave)
 
-  // Botões de adicionar
   $("add-requisito").addEventListener("click", () => adicionarRequisito())
   $("add-situacao-atual").addEventListener("click", () => adicionarLinha("situacao-atual-table"))
   $("add-situacao-alvo").addEventListener("click", () => adicionarLinha("situacao-alvo-table"))
@@ -20,7 +18,6 @@ function initializeEventListeners() {
   $("add-indicadores").addEventListener("click", () => adicionarLinha("indicadores-table"))
 }
 
-// Funções de Login/Logout
 function handleLogin() {
   const setor = $("setor-select").value
   if (!setor) {
@@ -46,7 +43,6 @@ function handleSave() {
   salvarDados(setor)
 }
 
-// Funções para Requisitos
 function adicionarRequisito() {
   const lista = $("requisitos-list")
   const li = document.createElement("li")
@@ -61,7 +57,6 @@ function removerRequisito(button) {
   button.parentElement.remove()
 }
 
-// Funções para Tabelas
 function adicionarLinha(tableId) {
   const table = $(tableId)
   const row = table.insertRow(-1)
@@ -81,6 +76,7 @@ function adicionarLinha(tableId) {
 
   if (tableId === "indicadores-table") {
     configurarCalculoMedia(row)
+    configurarColoracaoCelulas(row)
   }
 }
 
@@ -134,11 +130,46 @@ function configurarCalculoMedia(row) {
       const media = valores.length > 0 ? valores.reduce((a, b) => a + b, 0) / valores.length : 0
 
       mediaCell.textContent = media.toFixed(2)
+      aplicarColoracao(row)
     })
   })
 }
 
-// Funções de Dados
+function configurarColoracaoCelulas(row) {
+  const metaInput = row.cells[1].querySelector("input")
+  const objFuturoInput = row.cells[2].querySelector("input")
+  ;[metaInput, objFuturoInput].forEach((input) => {
+    input.addEventListener("input", () => aplicarColoracao(row))
+  })
+}
+
+function aplicarColoracao(row) {
+  const meta = Number.parseFloat(row.cells[1].querySelector("input").value)
+  const objFuturo = Number.parseFloat(row.cells[2].querySelector("input").value)
+
+  if (isNaN(meta) || isNaN(objFuturo)) return
+
+  const cells = Array.from(row.cells).slice(3) // Jan até Média
+
+  cells.forEach((cell) => {
+    const valor = Number.parseFloat(cell.querySelector("input")?.value || cell.textContent)
+    if (isNaN(valor)) return
+
+    let cor
+    if (objFuturo > meta) {
+      if (valor >= objFuturo) cor = "verde"
+      else if (valor >= meta) cor = "laranja"
+      else cor = "vermelho"
+    } else {
+      if (valor <= objFuturo) cor = "verde"
+      else if (valor <= meta) cor = "laranja"
+      else cor = "vermelho"
+    }
+
+    cell.className = `cor-${cor}`
+  })
+}
+
 function salvarDados(setor) {
   const dados = {
     requisitos: getRequisitosData(),
@@ -178,7 +209,6 @@ function carregarDados(setor) {
 
   const dados = JSON.parse(dadosSalvos)
 
-  // Carregar requisitos
   $("requisitos-list").innerHTML = ""
   dados.requisitos.forEach((requisito) => {
     const li = document.createElement("li")
@@ -189,7 +219,6 @@ function carregarDados(setor) {
     $("requisitos-list").appendChild(li)
   })
 
-  // Carregar tabelas
   carregarTabela("situacao-atual-table", dados.situacaoAtual)
   carregarTabela("situacao-alvo-table", dados.situacaoAlvo)
   carregarTabela("plano-acao-table", dados.planoAcao)
@@ -219,6 +248,8 @@ function carregarTabela(tableId, dados) {
 
     if (tableId === "indicadores-table") {
       configurarCalculoMedia(row)
+      configurarColoracaoCelulas(row)
+      aplicarColoracao(row)
     }
   })
 }

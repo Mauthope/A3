@@ -31,8 +31,10 @@
         
         <section id="requisitos-negocio">
             <h2>Requisitos de Negócio</h2>
-            <ul class="requisitos-list"></ul>
-            <button class="btn-adicionar" onclick="adicionarTopico()">Adicionar Tópico</button>
+            <ul id="requisitos-list" class="requisitos-list">
+                <!-- Requisitos serão adicionados aqui -->
+            </ul>
+            <button id="add-requisito" class="btn-adicionar">Adicionar Tópico</button>
         </section>
 
         <div class="situacao-container">
@@ -49,7 +51,7 @@
                     </thead>
                     <tbody></tbody>
                 </table>
-                <button class="btn-adicionar" onclick="adicionarLinha('situacao-atual-table')">Adicionar Linha</button>
+                <button class="btn-adicionar" id="add-situacao-atual">Adicionar Linha</button>
             </div>
 
             <div class="situacao-alvo">
@@ -65,7 +67,7 @@
                     </thead>
                     <tbody></tbody>
                 </table>
-                <button class="btn-adicionar" onclick="adicionarLinha('situacao-alvo-table')">Adicionar Linha</button>
+                <button class="btn-adicionar" id="add-situacao-alvo">Adicionar Linha</button>
             </div>
         </div>
 
@@ -85,7 +87,7 @@
                 </thead>
                 <tbody></tbody>
             </table>
-            <button class="btn-adicionar" onclick="adicionarLinha('plano-acao-table')">Adicionar Linha</button>
+            <button class="btn-adicionar" id="add-plano-acao">Adicionar Linha</button>
         </section>
 
         <section class="indicadores">
@@ -113,7 +115,7 @@
                 </thead>
                 <tbody></tbody>
             </table>
-            <button class="btn-adicionar" onclick="adicionarLinha('indicadores-table')">Adicionar Linha</button>
+            <button class="btn-adicionar" id="add-indicadores">Adicionar Linha</button>
         </section>
 
         <div class="actions">

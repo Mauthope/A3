@@ -31,98 +31,108 @@
         
         <section id="requisitos-negocio">
             <h2>Requisitos de Negócio</h2>
-            <ul id="requisitos-list" class="requisitos-list">
-                <!-- Requisitos serão adicionados dinamicamente -->
-            </ul>
+            <div class="requisitos-wrapper">
+                <ul id="requisitos-list" class="requisitos-list">
+                    <!-- Requisitos serão adicionados dinamicamente -->
+                </ul>
+            </div>
             <button id="add-requisito" class="btn-adicionar">Adicionar Tópico</button>
         </section>
 
         <div class="situacao-container">
             <div class="situacao-atual">
                 <h2>Situação Atual</h2>
-                <table id="situacao-atual-table">
-                    <thead>
-                        <tr>
-                            <th>Indicadores</th>
-                            <th>Meta</th>
-                            <th>OBJ. Futuro</th>
-                            <th>Realizado ano anterior</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Linhas serão adicionadas dinamicamente -->
-                    </tbody>
-                </table>
+                <div class="table-wrapper">
+                    <table id="situacao-atual-table">
+                        <thead>
+                            <tr>
+                                <th>Indicadores</th>
+                                <th>Meta</th>
+                                <th>OBJ. Futuro</th>
+                                <th>Realizado ano anterior</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Linhas serão adicionadas dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
                 <button class="btn-adicionar" id="add-situacao-atual">Adicionar Linha</button>
             </div>
 
             <div class="situacao-alvo">
                 <h2>Situação Alvo</h2>
-                <table id="situacao-alvo-table">
-                    <thead>
-                        <tr>
-                            <th>Indicadores</th>
-                            <th>Meta</th>
-                            <th>OBJ. Futuro</th>
-                            <th>Realizado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Linhas serão adicionadas dinamicamente -->
-                    </tbody>
-                </table>
+                <div class="table-wrapper">
+                    <table id="situacao-alvo-table">
+                        <thead>
+                            <tr>
+                                <th>Indicadores</th>
+                                <th>Meta</th>
+                                <th>OBJ. Futuro</th>
+                                <th>Realizado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Linhas serão adicionadas dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
                 <button class="btn-adicionar" id="add-situacao-alvo">Adicionar Linha</button>
             </div>
         </div>
 
         <section class="plano-acao">
             <h2>Plano de Ação</h2>
-            <table id="plano-acao-table">
-                <thead>
-                    <tr>
-                        <th>Ação</th>
-                        <th>Indicadores Alvo</th>
-                        <th>Data de Abertura</th>
-                        <th>Responsável</th>
-                        <th>Prazo</th>
-                        <th>Status</th>
-                        <th>Evidência</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Linhas serão adicionadas dinamicamente -->
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table id="plano-acao-table">
+                    <thead>
+                        <tr>
+                            <th class="col-acao">Ação</th>
+                            <th>Indicadores Alvo</th>
+                            <th>Data de Abertura</th>
+                            <th>Responsável</th>
+                            <th>Prazo</th>
+                            <th>Status</th>
+                            <th>Evidência</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Linhas serão adicionadas dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
             <button class="btn-adicionar" id="add-plano-acao">Adicionar Linha</button>
         </section>
 
         <section class="indicadores">
             <h2>Indicadores</h2>
-            <table id="indicadores-table">
-                <thead>
-                    <tr>
-                        <th>Indicadores</th>
-                        <th>Meta</th>
-                        <th>OBJ Futuro</th>
-                        <th>Jan</th>
-                        <th>Fev</th>
-                        <th>Mar</th>
-                        <th>Abr</th>
-                        <th>Mai</th>
-                        <th>Jun</th>
-                        <th>Jul</th>
-                        <th>Ago</th>
-                        <th>Set</th>
-                        <th>Out</th>
-                        <th>Nov</th>
-                        <th>Dez</th>
-                        <th>Média</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Linhas serão adicionadas dinamicamente -->
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table id="indicadores-table">
+                    <thead>
+                        <tr>
+                            <th>Indicadores</th>
+                            <th>Meta</th>
+                            <th>OBJ Futuro</th>
+                            <th>Jan</th>
+                            <th>Fev</th>
+                            <th>Mar</th>
+                            <th>Abr</th>
+                            <th>Mai</th>
+                            <th>Jun</th>
+                            <th>Jul</th>
+                            <th>Ago</th>
+                            <th>Set</th>
+                            <th>Out</th>
+                            <th>Nov</th>
+                            <th>Dez</th>
+                            <th>Média</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Linhas serão adicionadas dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
             <button class="btn-adicionar" id="add-indicadores">Adicionar Linha</button>
         </section>
 

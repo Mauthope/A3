@@ -73,7 +73,31 @@ function adicionarLinha(tableId) {
     if (tableId === "plano-acao-table") {
       cell.appendChild(criarCelulaPlanoAcao(i))
     } else if (tableId === "indicadores-table") {
-      cell.appendChild(criarCelulaIndicadores(i, numCols))
+      if (i >= 3 && i < numCols - 1) {
+        // Células de Jan a Dez
+        const input = criarInput()
+        input.addEventListener("input", function () {
+          const meta = row.cells[1].querySelector("input").value
+          const objFuturo = row.cells[2].querySelector("input").value
+          aplicarCorCelula(this.parentNode, this.value, meta, objFuturo)
+          calcularMedia(row)
+        })
+        cell.appendChild(input)
+      } else if (i === numCols - 1) {
+        // Célula de Média
+        const span = document.createElement("span")
+        span.textContent = "0.00"
+        cell.appendChild(span)
+      } else {
+        const input = criarInput()
+        if (i === 1 || i === 2) {
+          // Meta e OBJ Futuro
+          input.addEventListener("input", () => {
+            atualizarCoresLinha(row)
+          })
+        }
+        cell.appendChild(input)
+      }
     } else {
       cell.appendChild(criarInput())
     }
@@ -125,17 +149,68 @@ function configurarCalculoMedia(row) {
   const inputs = Array.from(row.cells)
     .slice(3, -1)
     .map((cell) => cell.querySelector("input"))
-  const mediaCell = row.cells[row.cells.length - 1]
+  const mediaCell = row.cells[row.cells.length - 1].querySelector("span")
 
   inputs.forEach((input) => {
     input.addEventListener("input", () => {
-      const valores = inputs.map((inp) => Number.parseFloat(inp.value)).filter((val) => !isNaN(val))
-
-      const media = valores.length > 0 ? valores.reduce((a, b) => a + b, 0) / valores.length : 0
-
-      mediaCell.textContent = media.toFixed(2)
+      calcularMedia(row)
     })
   })
+}
+
+function calcularMedia(row) {
+  const inputs = Array.from(row.cells)
+    .slice(3, -1)
+    .map((cell) => cell.querySelector("input"))
+  const valores = inputs.map((inp) => Number.parseFloat(inp.value)).filter((val) => !isNaN(val))
+
+  const media = valores.length > 0 ? valores.reduce((a, b) => a + b, 0) / valores.length : 0
+
+  const mediaCell = row.cells[row.cells.length - 1].querySelector("span")
+  mediaCell.textContent = media.toFixed(2)
+
+  const meta = row.cells[1].querySelector("input").value
+  const objFuturo = row.cells[2].querySelector("input").value
+  aplicarCorCelula(mediaCell.parentNode, media, meta, objFuturo)
+}
+
+function aplicarCorCelula(cell, valor, meta, objFuturo) {
+  valor = Number.parseFloat(valor)
+  meta = Number.parseFloat(meta)
+  objFuturo = Number.parseFloat(objFuturo)
+
+  if (isNaN(valor) || isNaN(meta) || isNaN(objFuturo)) {
+    return // Não aplica cor se algum valor não for número
+  }
+
+  cell.classList.remove("cell-green", "cell-orange", "cell-red")
+
+  if (objFuturo > meta) {
+    if (valor >= objFuturo) {
+      cell.classList.add("cell-green")
+    } else if (valor >= meta) {
+      cell.classList.add("cell-orange")
+    } else {
+      cell.classList.add("cell-red")
+    }
+  } else {
+    if (valor <= objFuturo) {
+      cell.classList.add("cell-green")
+    } else if (valor <= meta) {
+      cell.classList.add("cell-orange")
+    } else {
+      cell.classList.add("cell-red")
+    }
+  }
+}
+
+function atualizarCoresLinha(row) {
+  const meta = row.cells[1].querySelector("input").value
+  const objFuturo = row.cells[2].querySelector("input").value
+  for (let i = 3; i < row.cells.length - 1; i++) {
+    const input = row.cells[i].querySelector("input")
+    aplicarCorCelula(input.parentNode, input.value, meta, objFuturo)
+  }
 }
 
 // Funções de Dados
@@ -206,10 +281,34 @@ function carregarTabela(tableId, dados) {
       const cell = row.insertCell()
       if (tableId === "plano-acao-table") {
         cell.appendChild(criarCelulaPlanoAcaoComDado(index, cellData))
-      } else if (tableId === "indicadores-table" && index === rowData.length - 1) {
-        const span = document.createElement("span")
-        span.textContent = cellData
-        cell.appendChild(span)
+      } else if (tableId === "indicadores-table") {
+        if (index >= 3 && index < rowData.length - 1) {
+          // Células de Jan a Dez
+          const input = criarInput()
+          input.value = cellData
+          input.addEventListener("input", function () {
+            const meta = row.cells[1].querySelector("input").value
+            const objFuturo = row.cells[2].querySelector("input").value
+            aplicarCorCelula(this.parentNode, this.value, meta, objFuturo)
+            calcularMedia(row)
+          })
+          cell.appendChild(input)
+        } else if (index === rowData.length - 1) {
+          // Célula de Média
+          const span = document.createElement("span")
+          span.textContent = cellData
+          cell.appendChild(span)
+        } else {
+          const input = criarInput()
+          input.value = cellData
+          if (index === 1 || index === 2) {
+            // Meta e OBJ Futuro
+            input.addEventListener("input", () => {
+              atualizarCoresLinha(row)
+            })
+          }
+          cell.appendChild(input)
+        }
       } else {
         const input = criarInput()
         input.value = cellData
@@ -219,6 +318,7 @@ function carregarTabela(tableId, dados) {
 
     if (tableId === "indicadores-table") {
       configurarCalculoMedia(row)
+      atualizarCoresLinha(row)
     }
   })
 }

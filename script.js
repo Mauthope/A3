@@ -81,12 +81,12 @@ function adicionarLinha(tableId) {
 }
 
 function criarCelulaPlanoAcao(colIndex) {
-  if (colIndex === 2 || colIndex === 4) {
+  if (colIndex === 3 || colIndex === 5) {
     // Data de Abertura e Prazo
     const input = document.createElement("input");
     input.type = "date";
     return input;
-  } else if (colIndex === 5) {
+  } else if (colIndex === 6) {
     // Status
     const select = document.createElement("select");
     select.innerHTML = `
@@ -98,25 +98,26 @@ function criarCelulaPlanoAcao(colIndex) {
     select.addEventListener('change', () => {
       const status = select.value;
       const row = select.closest('tr'); // Encontrar a linha onde o status foi alterado
-      const prazoCell = row.cells[4]; // Supondo que o prazo esteja na coluna 4
+      const prazoCell = row.cells[4]; // Coluna 5 (Índice 4) - Prazo
       const prazo = new Date(prazoCell.querySelector("input").value); // Pega a data do prazo
       const hoje = new Date();
       
+      // Atualiza a cor de fundo conforme o status
       if (status === "Concluído") {
         row.style.backgroundColor = "green";
       } else if (status === "Em andamento") {
         row.style.backgroundColor = "blue";
       }
 
+      // Se a data passou do prazo e o status não for "Concluído", marca como Atrasado
       if (hoje > prazo && status !== "Concluído") {
-        // Se a data passou do prazo e não foi concluído, marca como Atrasado
         row.style.backgroundColor = "red";
         select.closest('td').textContent = "Atrasado"; // Atualiza o status para "Atrasado"
       }
     });
 
     return select;
-  } else if (colIndex === 6) { // Supondo que o índice 6 seja a célula de "Evidência"
+  } else if (colIndex === 7) { // Supondo que o índice 7 seja a célula de "Evidência"
     // Cria um campo de texto normal, em branco
     const input = document.createElement("input");
     input.type = "text";
@@ -143,6 +144,7 @@ function criarCelulaPlanoAcao(colIndex) {
     return criarInput();
   }
 }
+
 
 
 function criarCelulaIndicadores(colIndex, numCols) {

@@ -166,9 +166,16 @@ function aplicarColoracao(row) {
       else cor = "vermelho"
     }
 
+    // Adicionando uma verificação extra para valores muito pequenos (menores que 1)
+    if (objFuturo < 1 && valor < 1) {
+      // Se ambos são frações menores que 1, considerar como próximos
+      cor = "verde"
+    }
+
     cell.className = `cor-${cor}`
   })
 }
+
 
 function salvarDados(setor) {
   const dados = {

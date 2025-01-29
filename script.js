@@ -144,31 +144,37 @@ function configurarColoracaoCelulas(row) {
 }
 
 function aplicarColoracao(row) {
-  const meta = Number.parseFloat(row.cells[1].querySelector("input").value)
-  const objFuturo = Number.parseFloat(row.cells[2].querySelector("input").value)
+  const meta = Number(row.cells[1].querySelector("input").value) || 0
+  const objFuturo = Number(row.cells[2].querySelector("input").value) || 0
 
   if (isNaN(meta) || isNaN(objFuturo)) return
 
-  const cells = Array.from(row.cells).slice(3) // Jan até Média
+  const cells = Array.from(row.cells).slice(3) // Pegando as células de valores (exclui Meta e OBJ Futuro)
 
   cells.forEach((cell) => {
-    const valor = Number.parseFloat(cell.querySelector("input")?.value || cell.textContent)
+    const input = cell.querySelector("input")
+    const valor = input ? Number(input.value) || 0 : Number(cell.textContent) || 0
     if (isNaN(valor)) return
 
     let cor
     if (objFuturo > meta) {
+      // Quando OBJ Futuro é MAIOR que a Meta
       if (valor >= objFuturo) cor = "verde"
-      else if (valor >= meta && valor < objFuturo) cor = "laranja"
+      else if (valor >= meta) cor = "laranja"
       else cor = "vermelho"
     } else {
+      // Quando OBJ Futuro é MENOR ou IGUAL à Meta
       if (valor <= objFuturo) cor = "verde"
-      else if (valor > objFuturo && valor <= meta) cor = "laranja"
+      else if (valor <= meta) cor = "laranja"
       else cor = "vermelho"
     }
 
-    cell.className = `cor-${cor}`
+    // Removendo cores antigas antes de aplicar a nova
+    cell.classList.remove("cor-verde", "cor-laranja", "cor-vermelho")
+    cell.classList.add(`cor-${cor}`)
   })
 }
+
 
 function salvarDados(setor) {
   const dados = {
